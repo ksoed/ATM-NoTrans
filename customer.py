@@ -11,13 +11,12 @@ class Customer:
     first_name = ""
     last_name = ""
 
-    def __init__(self, cust_id, cust_pnr, first_name, last_name):
+    def __init__(self, cust_id, first_name, last_name, cust_pnr):
         self.cust_id = cust_id
-        self.cust_pnr = cust_pnr
         self.first_name = first_name
         self.last_name = last_name
+        self.cust_pnr = cust_pnr
         
-    # represents the class objects as a string
+    # Represents The Class Objects As A String
     def __str__(self):        
-        #return self.cust_id + self.first_name + " " + self.last_name + " - " + str(self.cust_pnr)
-        return self.first_name + " " + self.last_name + " " + str(self.cust_pnr)
+        return self.first_name + " " + self.last_name + " - " + str(self.cust_pnr)
