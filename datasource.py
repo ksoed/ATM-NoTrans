@@ -7,8 +7,14 @@ Created on Thu Jan 27 01:23:27 2022
 class Datasource:
     
     customers_table = "custs_table.txt"
+    
+
 
     def datasource_conn(self):
+        '''
+        Method to ensure that the connection to the data source (ie. text file or sql file)
+        is established. True or False cases generate a message.
+        '''
         try:
             f = open(self.customers_table)
             conn_state = (True, "Connection Successful", self.customers_table)
@@ -28,6 +34,24 @@ class Datasource:
             f = open(self.customers_table, "r")
             for x in f:
                 row = x.strip().split(":")
+                
+                '''
+                string.strip([chars])
+                Parameter: 
+                There is only one optional parameter in it:
+                1)chars - a string specifying 
+                the set of characters to be removed. 
+                
+                If the optional chars parameter is not given, all leading 
+                and trailing whitespaces are removed from the string.
+                Return Value:
+                Returns a copy of the string with both leading and trailing characters removed.
+                In this case since the first customer is:
+                    100001:Erminie Larsson:30264260:1001:debit account:6614.0
+                then this loop will chopp up the above row at ":" and put the resulted strings
+                into the first row of the "data" list as follow:
+                    ["100001","Erminie Larsson","30264260","1001","debit account","6614.0"]
+                '''
                 data.append(row)
         finally:
             f.close()
@@ -84,7 +108,7 @@ class Datasource:
         
         
 
-    #Add Account To Row (ie. Customers) In cust_table File
+    # Add Account To Row (ie. Customers) In cust_table File
     def update_row_acc(self, account, cust_pnr):
         f = open(self.customers_table, "r")
         rows = f.readlines()
@@ -131,6 +155,7 @@ class Datasource:
             if str(acc_num) in row:
                 index = rows.index(row)
                 if "#" in row:
+                    # Arrangement Of Items Is Based On User Story
                     customer_info = row.strip().split("#")[0].split(":")[:3]
                     first_acc = row.strip().split("#")[0].split(":")[3:]
                     second_acc = row.strip().split("#")[1].split(":")
@@ -156,4 +181,3 @@ class Datasource:
                 f.close()
                 return True
         return False
-                
