@@ -14,3 +14,5 @@ The project is fully operational and provides the following functions expected f
 9. Exit the ATM
 
 Social Security Number (PNR) is used for identifying existing customer / creating customers and for subsequent account creation, account transactions and account termination.
+
+NOTE: This project is a prototype and experimental code. If you want to use it read the code thoroughly and use it at your own risk.
