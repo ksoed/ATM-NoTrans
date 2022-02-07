@@ -13,8 +13,9 @@ bank._load()
 def main():
     execute = True
     while(execute):
+        # Keeping The Menu Alive
         print("\n1. List All Existing Customers\n2. Search For A Customer\n3. Add New Customer")
-        print("4. Update Customer Information\n5. Delete Customer\n6. Create Account")
+        print("4. Update Customer Information\n5. Remove Customer\n6. Create Account")
         print("7. Transaction\n8. Terminate Account\n9. Exit")
 
         try:
@@ -23,12 +24,16 @@ def main():
                 print("Please Choose Aleternatives 1-9")
         except ValueError:
             print("Invalid Entry")
+            
+            
 
         # Show Bank's All Customers
         if choice == 1:
-            print("\nCustomer Names And Their Corresponding Social Security Number")
+            print("\nNames And Social Security Number For All Customers")
             for x in bank.customers:
                 print(x)
+
+
 
         # Print Customer's Details
         elif choice == 2:
@@ -36,17 +41,20 @@ def main():
             if pnr != 0:
                 print(bank.get_customer(pnr))
 
+
+
         # Add New Customer
         elif choice == 3:
-            first_name = str(input("\nEnter First Name: "))
-            last_name = str(input("\nEnter Last Name: "))
             pnr = pnr_input()
             if pnr != 0:
-                Added_customer = bank.add_customer(first_name, last_name, int(pnr))
-                if Added_customer:
+                first_name = str(input("\nEnter First Name: "))
+                last_name = str(input("\nEnter Last Name: "))
+                if bank.add_customer(first_name, last_name, pnr):
                     print("\nCustomer With Social Security Number {} Added.".format(pnr))
                 else:
-                    print("\nCustomer Already Exists.")
+                    print("\nThis Social Security Number Already Exists.")                    
+                    
+                
 
         # Update Customer's Name
         elif choice == 4:
@@ -58,24 +66,27 @@ def main():
                     print("\nCustomer Name Is Updated.")
                 else:
                     print("\nCustomer Does Not Exist.")
+                    
+                    
 
-        # Delete Customer
+        # Remove Customer
         elif choice == 5:
             pnr = pnr_input()
             if pnr != 0:
                 found_cust_rem = bank.remove_customer(pnr)
                 if found_cust_rem:
-                    print("\nCustomer With Social Security Number {} Is Deleted.".format(pnr))
+                    print("\nCustomer With Social Security Number {} Is Removed.".format(pnr))
                     if len(found_cust_rem) == 3:
-                        print("\nDeleted Accounts:")
+                        print("\nTerminated Accounts:")
                         print(found_cust_rem[0])
                         print(found_cust_rem[1])
                     elif len(found_cust_rem) == 2:
-                        print("\nDeleted Accounts:")
+                        print("\nTerminated Accounts:")
                         print(found_cust_rem[0])
                     print("\n${} Is Refunded.".format(found_cust_rem[-1]))
                 else:
                     print("Customer Does Not Exist.")
+                    
 
 
         # Create Account For An Existing Customer
@@ -86,7 +97,9 @@ def main():
                 if acc_num != -1:
                     print("Account With Account Number {} Is Created.".format(acc_num))
                 else:
-                    print("Customer Already Has 2 Accounts")  
+                    print("Customer Already Has 2 Accounts.\nPlease Contact The Bank.")
+                    
+                    
 
         # Transactions 
         elif choice == 7:
@@ -115,7 +128,8 @@ def main():
                                         if bank.withdraw(pnr, acc_num, trans_amount):
                                             print("\n${} Withdrawn From The Account {}.".format(trans_amount, acc_num))
                                         else:
-                                            print("\nWithdraw Failed. Please Contact The Bank.")
+                                            # Error Message If The Withdraw Amount Requested Is more Than Current Balance
+                                            print("\nWithdraw Failed. No Sufficient Found Available.\nPlease Contact The Bank.")
                                     else:
                                         if bank.deposit(pnr, acc_num, trans_amount):
                                             print("\n${} Deposited To The Account {}.".format(trans_amount, acc_num))
@@ -125,7 +139,7 @@ def main():
                                     print("Invalid Entry. Please Enter Positive Amount Only")
 
                             except ValueError:
-                                print("Invalid Entry. DIgits Only.")
+                                print("Invalid Entry. Digits Only.")
 
 
 
@@ -136,9 +150,9 @@ def main():
                 if display_customer_accounts(pnr):
                     acc_num = acc_num_input()
                     if acc_num != 0:
-                        print(bank.close_account(pnr, acc_num))
-          
-            
+                        print(bank.remove_account(pnr, acc_num))
+
+
 
         # Exit The Application
         elif choice == 9:
@@ -146,17 +160,22 @@ def main():
             exit()
 
 
+############################################
 
+
+
+# Display All Accounts Specific To A Customer
 def display_customer_accounts(pnr):
-    returned_acc_info = bank.get_all_acc_from_customer(pnr)
-    if returned_acc_info:
+    found_accs = bank.get_cust_accs(pnr)
+    if found_accs:
         print("\nCustomer's Account(s):")
-        for x in returned_acc_info:
+        for x in found_accs:
             print(x)
     else:
         print("\nCustomer With Social Security Number {} Has No Account.".format(pnr))
         return False
     return True
+
 
 
 # User Social Security Number Input
@@ -171,6 +190,8 @@ def pnr_input():
         print("\nSocial Security Number Contains Digits Only!")
     return 0
 
+
+
 # User Accoiunt Number Input
 def acc_num_input():
     try:
@@ -183,8 +204,12 @@ def acc_num_input():
         print("Account Number Contains Numbers Only!")
     return 0
 
+
+
 """
-if __name__ == “main”: is used to execute some code only if the file was run directly, and not imported
+The
+if __name__ == “main”:
+is used to execute some code only if the file was run directly, and not imported
 """
 if __name__ == "__main__":
     main()
